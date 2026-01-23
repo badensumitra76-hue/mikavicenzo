@@ -27,17 +27,26 @@
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      /* Menjaga teks tetap lurus di kiri */
-      align-items: flex-start; 
+      /* Default box sekarang center untuk instruksi awal */
+      align-items: center; 
     }
 
     #text {
       white-space: pre-line;
-      /* Jarak antar baris dipersempit (tadinya 1.8 jadi 1.4) */
       line-height: 1.4; 
       font-size: 16px;
-      text-align: left; 
       width: 100%;
+      /* Awalnya center untuk tulisan 'tap di mana saja' */
+      text-align: center; 
+    }
+
+    /* Ini class baru untuk mengubah teks jadi rata kiri saat mulai */
+    .align-left {
+      text-align: left !important;
+    }
+
+    .box-left {
+      align-items: flex-start !important;
     }
 
     #text::after {
@@ -54,16 +63,15 @@
       opacity: 0.3;
       margin-top: 30px;
       font-size: 12px;
-      align-self: center; 
       text-align: center;
     }
   </style>
 </head>
 <body>
 
-<div class="box" onclick="start()">
+<div id="container" class="box" onclick="start()">
   <div id="text">tap di mana saja...</div>
-  <div class="hint">pastikan suara aktif</div>
+  <div id="hintText" class="hint">pastikan suara aktif</div>
 </div>
 
 <audio id="music">
@@ -71,7 +79,6 @@
 </audio>
 
 <script>
-  // Menghilangkan enter berlebih di dalam teks agar tidak terlalu renggang
   const message = `selamat ulang tahun ya, aya.
 
 di hari kamu nambah usia ini,
@@ -95,6 +102,13 @@ kamu pantas buat bahagia.`;
   function start() {
     if (started) return;
     started = true;
+
+    // Menghilangkan hint suara
+    document.getElementById("hintText").style.display = "none";
+
+    // Mengubah posisi box dan teks menjadi rata kiri
+    document.getElementById("container").classList.add("box-left");
+    document.getElementById("text").classList.add("align-left");
 
     const music = document.getElementById("music");
     music.volume = 0.8;
