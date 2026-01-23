@@ -4,17 +4,22 @@
   <meta charset="UTF-8">
   <title>Untuk Aya</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
     body {
       background-color: #0f0f0f;
       color: #f1f1f1;
-      font-family: Arial, sans-serif;
+      /* Pakai font mesin tik di sini */
+      font-family: 'Courier Prime', monospace; 
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
       text-align: center;
+      overflow: hidden;
     }
 
     .box {
@@ -26,13 +31,26 @@
     #text {
       white-space: pre-line;
       line-height: 1.8;
-      font-size: 16px;
+      font-size: 18px;
+      min-height: 100px;
+    }
+
+    /* Efek garis kedap-kedip khas mesin tik */
+    #text::after {
+      content: "|";
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
     }
 
     .hint {
-      opacity: 0.5;
+      opacity: 0.3;
       margin-top: 25px;
-      font-size: 14px;
+      font-size: 13px;
+      letter-spacing: 1px;
     }
   </style>
 </head>
@@ -40,7 +58,7 @@
 
 <div class="box" onclick="start()">
   <div id="text">tap di mana aja untuk membuka pesan</div>
-  <div class="hint"></div>
+  <div class="hint">pastikan volume suara aktif</div>
 </div>
 
 <audio id="music">
@@ -74,26 +92,22 @@ kamu pantas buat bahagia.
     if (started) return;
     started = true;
 
-    // play music
     const music = document.getElementById("music");
     music.volume = 0.8;
     music.play();
 
-    // clear text
     const textEl = document.getElementById("text");
     textEl.innerHTML = "";
 
-    // typing effect
     const interval = setInterval(() => {
       textEl.innerHTML += message.charAt(index);
       index++;
       if (index >= message.length) {
         clearInterval(interval);
       }
-    }, 45); // makin kecil makin cepet
+    }, 60); // Kecepatan ngetik (60ms)
   }
 </script>
 
 </body>
 </html>
-
