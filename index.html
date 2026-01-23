@@ -8,64 +8,69 @@
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      background-color: #0f0f0f;
-      color: #f1f1f1;
-      font-family: 'Courier Prime', monospace; 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
-    }
+  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
 
-    .box {
-      width: 85%;
-      max-width: 380px; 
-      padding: 10px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      /* Default box sekarang center untuk instruksi awal */
-      align-items: center; 
-    }
+  body {
+    background-color: #0f0f0f;
+    color: #f1f1f1;
+    font-family: 'Courier Prime', monospace; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+  }
 
-    #text {
-      white-space: pre-line;
-      line-height: 1.2; 
-      font-size: 16px;
-      width: 100%;
-      /* Awalnya center untuk tulisan 'tap di mana saja' */
-      text-align: center; 
-    }
+  .box {
+    /* Bagian ini yang diubah agar bisa di-tap di mana saja */
+    width: 100vw;   /* Memenuhi lebar layar */
+    height: 100vh;  /* Memenuhi tinggi layar */
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Teks tetap di tengah layar secara vertikal */
+    align-items: center;     /* Teks tetap di tengah layar secara horizontal */
+    box-sizing: border-box;
+  }
 
-    /* Ini class baru untuk mengubah teks jadi rata kiri saat mulai */
-    .align-left {
-      text-align: left !important;
-    }
+  #text {
+    white-space: pre-line;
+    line-height: 1.3; 
+    font-size: 16px;
+    width: 85%;
+    max-width: 380px;
+    text-align: center; /* Awalnya center */
+    transition: all 0.3s ease;
+  }
 
-    .box-left {
-      align-items: flex-start !important;
-    }
+  /* Class untuk merata kirikan teks saat mulai */
+  .align-left {
+    text-align: left !important;
+  }
 
-    #text::after {
-      content: "|";
-      animation: blink 0.8s infinite;
-    }
+  .box-left {
+    align-items: center !important; /* Box tetap di tengah, tapi isinya nanti rata kiri */
+  }
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
+  #text::after {
+    content: "|";
+    animation: blink 0.8s infinite;
+  }
 
-    .hint {
-      opacity: 0.3;
-      margin-top: 30px;
-      font-size: 12px;
-      text-align: center;
-    }
-  </style>
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .hint {
+    opacity: 0.3;
+    margin-top: 20px;
+    font-size: 12px;
+    text-align: center;
+  }
+</style>
 </head>
 <body>
 
@@ -93,6 +98,13 @@ semoga di umur kamu yang sekarang,
 kamu selalu dikelilingi hal baik,
 orang-orang tulus,
 dan hidup yang bikin kamu tenang.
+
+semoga di umur kamu yang sekarang,
+kamu selalu dikelilingi hal baik,
+orang-orang tulus,
+dan hidup yang bikin kamu tenang.
+
+
 
 kamu pantas buat bahagia.`;
 
@@ -129,5 +141,6 @@ kamu pantas buat bahagia.`;
 
 </body>
 </html>
+
 
 
