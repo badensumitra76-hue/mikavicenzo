@@ -21,28 +21,30 @@
     }
 
     .box {
-      width: 100%;
-      max-width: 400px; /* Menjaga teks tetap di tengah secara konsisten */
-      padding: 40px 10%; 
+      /* Kunci lebar area teks agar tidak meluber */
+      width: 85%; 
+      max-width: 350px; 
       cursor: pointer;
+      text-align: center;
       display: flex;
       flex-direction: column;
-      justify-content: center; 
-      align-items: center;     
-      box-sizing: border-box;
-      text-align: center;
+      justify-content: center;
+      align-items: center;
     }
 
     #text {
-      white-space: pre-wrap; 
-      line-height: 2.0; 
-      font-size: 14px; 
+      /* white-space normal agar HP yang membagi baris secara otomatis dan rapi */
+      white-space: normal; 
+      line-height: 2.2; 
+      font-size: 14px;
       width: 100%;
       transition: opacity 0.8s ease;
     }
 
+    /* Rata kiri khusus saat pengetikan surat otomatis */
     .align-left {
       text-align: left !important;
+      white-space: pre-wrap !important;
     }
 
     .typing::after {
@@ -57,28 +59,15 @@
 
     .hint {
       opacity: 0.3;
-      margin-top: 40px;
+      margin-top: 50px;
       font-size: 11px;
-      text-align: center;
     }
   </style>
 </head>
 <body>
 
 <div id="container" class="box" onclick="start()">
-  <div id="text">hallo kak. maaf ganggu waktu nya yaa.
-kenalin aku mika vincenzo, utusan nya maul.
-
-ini mutiara kanjeng ratu aya yaa? kemarin maul
-titip pesan katanya buat kaka, malu katanya.
-pake malu segala loh, padahal biasanya juga
-malu malu in loh kak haduh, mana suka so kull lagi,
-kull dari hongkong kali.
-
-maaf kak mika lupa nyampein pesan nya kemarin.
-mika lagi sibuk latihan masak telor buat ikut
-master sepp, suka aga gosong dikit, tapi masih bisa sih.
-bisa di sembur sepp juna nanti hehe.</div>
+  <div id="text">hallo kak. maaf ganggu waktu nya yaa. kenalin aku mika vincenzo, utusan nya maul. ini mutiara kanjeng ratu aya yaa? kemarin maul titip pesan katanya buat kaka, malu katanya. pake malu segala loh, padahal biasanya juga malu malu in loh kak haduh, mana suka so kull lagi, kull dari hongkong kali. maaf kak mika lupa nyampein pesan nya kemarin. mika lagi sibuk latihan masak telor buat ikut master sepp, suka aga gosong dikit, tapi masih bisa sih. bisa di sembur sepp juna nanti hehe.</div>
 
   <div id="hintText" class="hint">tap dimana aja yaa terserah kaka</div>
 </div>
@@ -88,20 +77,17 @@ bisa di sembur sepp juna nanti hehe.</div>
 </audio>
 
 <script>
-  // Kalimat pendek yang muncul bergantian setelah tap
   const introTexts = [
     "hallo mba aya jeleqq",
     "mba aya cantik apa kabar yaaa?",
     "oiyaa kemaren mau bilang ini tapi lupa dikit."
   ];
 
-  // PESAN UTAMA (Semua pesan dari Mika Vincenzo yang ingin kamu sampaikan)
   const message = `hallo kak. maaf ganggu waktu nya yaa.
 kenalin aku mika vincenzo, utusan nya maul.
 
-ini mutiara kanjeng ratu aya yaa? 
-kemarin maul titip pesan katanya buat kaka, 
-malu katanya.
+ini mutiara kanjeng ratu aya yaa? kemarin maul
+titip pesan katanya buat kaka, malu katanya.
 
 pake malu segala loh, orang biasanya juga 
 malu maluin loh kak haduh, mana suka so kull lagi, 
@@ -116,8 +102,7 @@ paling di sembur sepp juna nanti.
 sekali lagi maaf yaa mika ganggu waktu nya, 
 gara gara maul nih dasar.
 
-oiya, selamat ulang tahun ya, aya.
-semoga bahagia selalu!`;
+oiya, selamat ulang tahun ya, aya.`;
 
   let index = 0;
   let started = false;
@@ -125,14 +110,11 @@ semoga bahagia selalu!`;
   async function start() {
     if (started) return;
     started = true;
-
     const textEl = document.getElementById("text");
     const hintEl = document.getElementById("hintText");
     const music = document.getElementById("music");
-
     hintEl.style.display = "none";
     
-    // Musik Fade In
     music.volume = 0;
     music.play();
     let volIn = setInterval(() => {
@@ -140,7 +122,6 @@ semoga bahagia selalu!`;
       else clearInterval(volIn);
     }, 200);
 
-    // Jalankan kalimat pembuka
     for (let quote of introTexts) {
       textEl.style.opacity = 0; 
       await sleep(800);
@@ -151,7 +132,6 @@ semoga bahagia selalu!`;
       await sleep(800);
     }
 
-    // Ketik otomatis pesan lengkap
     textEl.innerHTML = "";
     textEl.style.opacity = 1;
     textEl.classList.add("align-left", "typing");
@@ -159,14 +139,11 @@ semoga bahagia selalu!`;
     const interval = setInterval(() => {
       textEl.innerHTML += message.charAt(index);
       index++;
-      
-      // Auto-scroll supaya teks tidak hilang di bawah layar HP
       window.scrollTo(0, document.body.scrollHeight);
-
       if (index >= message.length) {
         clearInterval(interval);
       }
-    }, 90);
+    }, 80);
   }
 
   function sleep(ms) {
