@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>rexxas design</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
@@ -34,19 +33,20 @@
 
     #text {
       white-space: pre-wrap; 
-      line-height: 1.3; 
-      font-size: 14px; 
+      line-height: 1.5; 
+      font-size: 15px; 
       width: 90%;
       max-width: 450px;
       text-align: center;
-      word-wrap: break-word;
+      transition: opacity 1s ease; /* Untuk efek fade in/out */
     }
 
     .align-left {
       text-align: left !important;
     }
 
-    #text::after {
+    /* Kursor berkedip hanya muncul saat ngetik pesan panjang */
+    .typing::after {
       content: "|";
       animation: blink 0.8s infinite;
     }
@@ -76,52 +76,15 @@
 </audio>
 
 <script>
+  // Kalimat pembuka yang muncul bergantian
+  const introTexts = [
+    "halo...",
+    "apa kabar?",
+    "ada sesuatu buat kamu."
+  ];
+
+  // Pesan utama (mesin tik)
   const message = `selamat ulang tahun ya, aya.
-
-di hari kamu nambah usia ini,
-gua cuma pengen kamu tau
-kalo kehadiran kamu pernah
-berarti banget di hidup gua.
-
-makasih karena pernah hadir,
-pernah nemenin,
-dan pernah jadi bagian
-dari cerita gua.
-
-semoga di umur kamu yang sekarang,
-kamu selalu dikelilingi hal baik,
-orang-orang tulus,
-dan hidup yang bikin kamu tenang.
-
-di hari kamu nambah usia ini,
-gua cuma pengen kamu tau
-kalo kehadiran kamu pernah
-berarti banget di hidup gua.
-
-makasih karena pernah hadir,
-pernah nemenin,
-dan pernah jadi bagian
-dari cerita gua.
-
-semoga di umur kamu yang sekarang,
-kamu selalu dikelilingi hal baik,
-orang-orang tulus,
-dan hidup yang bikin kamu tenang.
-
-di hari kamu nambah usia ini,
-gua cuma pengen kamu tau
-kalo kehadiran kamu pernah
-berarti banget di hidup gua.
-
-makasih karena pernah hadir,
-pernah nemenin,
-dan pernah jadi bagian
-dari cerita gua.
-
-semoga di umur kamu yang sekarang,
-kamu selalu dikelilingi hal baik,
-orang-orang tulus,
-dan hidup yang bikin kamu tenang.
 
 di hari kamu nambah usia ini,
 gua cuma pengen kamu tau
@@ -143,47 +106,55 @@ kamu pantas buat bahagia.`;
   let index = 0;
   let started = false;
 
-  function start() {
+  async function start() {
     if (started) return;
     started = true;
 
-    // 1. Hilangkan petunjuk tap
-    document.getElementById("hintText").style.display = "none";
     const textEl = document.getElementById("text");
-    textEl.innerHTML = ""; // Layar jadi hitam kosong dulu
-
-    // 2. Putar musik dengan efek Fade In
+    const hintEl = document.getElementById("hintText");
     const music = document.getElementById("music");
-    music.volume = 0; // Mulai dari nol
-    music.play();
 
-    let fadeIn = setInterval(() => {
-      if (music.volume < 0.8) {
-        music.volume += 0.05; 
-      } else {
-        clearInterval(fadeIn);
-      }
+    hintEl.style.display = "none";
+    
+    // Musik Fade In
+    music.volume = 0;
+    music.play();
+    let volIn = setInterval(() => {
+      if (music.volume < 0.8) music.volume += 0.05;
+      else clearInterval(volIn);
     }, 200);
 
-    // 3. Jeda 1.5 detik baru mulai ngetik pesan
-    setTimeout(() => {
-      textEl.classList.add("align-left"); 
-      
-      const interval = setInterval(() => {
-        textEl.innerHTML += message.charAt(index);
-        index++;
-        
-        window.scrollTo(0, document.body.scrollHeight);
+    // --- SEQUENCE PEMBUKA ---
+    for (let quote of introTexts) {
+      textEl.style.opacity = 0; // Fade out teks sebelumnya
+      await sleep(1000);
+      textEl.innerHTML = quote;
+      textEl.style.opacity = 1; // Fade in teks baru
+      await sleep(2000);        // Tahan selama 2 detik
+      textEl.style.opacity = 0; // Fade out lagi
+      await sleep(1000);
+    }
 
-        if (index >= message.length) {
-          clearInterval(interval);
-        }
-      }, 90);
-    }, 1500); 
+    // --- MULAI PESAN UTAMA (MESIN TIK) ---
+    textEl.innerHTML = "";
+    textEl.style.opacity = 1;
+    textEl.classList.add("align-left", "typing");
+    
+    const interval = setInterval(() => {
+      textEl.innerHTML += message.charAt(index);
+      index++;
+      window.scrollTo(0, document.body.scrollHeight);
+      if (index >= message.length) {
+        clearInterval(interval);
+      }
+    }, 90);
+  }
+
+  // Fungsi pembantu buat jeda waktu
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 </script>
 
 </body>
 </html>
-
-
