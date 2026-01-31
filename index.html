@@ -21,10 +21,9 @@
     }
 
     .box {
-      /* Mengunci lebar box sebesar 85% dari lebar layar HP apapun */
-      width: 85vw; 
-      max-width: 400px;
-      min-height: 100vh;
+      width: 100%;
+      /* Penjepit teks: 12% dari lebar layar HP kiri & kanan */
+      padding: 40px 12%; 
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -35,18 +34,17 @@
     }
 
     #text {
-      white-space: pre-wrap; 
-      /* Line height pakai angka relatif agar jarak baris ikut menyesuaikan */
-      line-height: 1.8; 
-      font-size: 3.8vw; /* Ukuran font otomatis mengecil di HP kecil, membesar di HP besar */
-    }
-
-    @media screen and (min-width: 600px) {
-      #text { font-size: 14px; } /* Untuk tampilan laptop agar tidak kegedean */
+      /* Biarkan sistem yang mengatur baris agar rapi di layar masing-masing */
+      white-space: normal; 
+      line-height: 2.0; 
+      font-size: 14px; 
+      width: 100%;
+      transition: opacity 0.8s ease;
     }
 
     .align-left {
       text-align: left !important;
+      white-space: pre-wrap !important; 
     }
 
     .typing::after {
@@ -61,35 +59,15 @@
 
     .hint {
       opacity: 0.3;
-      margin-top: 5vh;
+      margin-top: 40px;
       font-size: 11px;
-      text-align: center;
     }
   </style>
 </head>
 <body>
 
 <div id="container" class="box" onclick="start()">
-  <div id="text">hallo kak. maaf ganggu waktu nya yaa.
-kenalin aku mika vincenzo,
-utusan nya maul.
-
-ini mutiara kanjeng ratu aya yaa?
-kemarin maul titip pesan katanya
-buat kaka, malu katanya.
-
-pake malu segala loh, padahal biasanya
-juga malu malu in loh kak haduh, mana
-suka so kull lagi,
-kull dari hongkong kali.
-
-maaf kak mika lupa nyampein pesan
-nya kemarin. mika lagi sibuk
-latihan masak telor buat ikut
-master sepp, suka aga gosong dikit,
-tapi masih bisa sih.
-
-bisa di sembur sepp juna nanti hehe.</div>
+  <div id="text">hallo kak. maaf ganggu waktu nya yaa. kenalin aku mika vincenzo, utusan nya maul. ini mutiara kanjeng ratu aya yaa? kemarin maul titip pesan katanya buat kaka, malu katanya. pake malu segala loh, padahal biasanya juga malu malu in loh kak haduh, mana suka so kull lagi, kull dari hongkong kali. maaf kak mika lupa nyampein pesan nya kemarin. mika lagi sibuk latihan masak telor buat ikut master sepp, suka aga gosong dikit, tapi masih bisa sih. bisa di sembur sepp juna nanti hehe. sekali lagi maaf yaa mika ganggu waktu nya, gara gara maul nih dasar.</div>
 
   <div id="hintText" class="hint">tap dimana aja yaa terserah kaka</div>
 </div>
@@ -99,12 +77,11 @@ bisa di sembur sepp juna nanti hehe.</div>
 </audio>
 
 <script>
+  // Muncul cuma 3 kali seperti permintaan awal kamu
   const introTexts = [
     "hallo mba aya jeleqq",
-    "jangan jeleq deh kasian,\nmba aya cantik ajahh",
     "mba aya cantik apa kabar yaaa?",
-    "pasti hari hari nya nya\nselalu menyenangkan kan?",
-    "oiyaa kemaren gua mau bilang\nini tapi lupa dikit."
+    "oiyaa kemaren mau bilang ini tapi lupa dikit."
   ];
 
   const message = `selamat ulang tahun ya, aya.
@@ -146,6 +123,7 @@ kamu pantas buat bahagia.`;
       else clearInterval(volIn);
     }, 200);
 
+    // Sequence 3 kalimat pembuka
     for (let quote of introTexts) {
       textEl.style.opacity = 0; 
       await sleep(800);
