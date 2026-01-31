@@ -33,14 +33,15 @@
 
     #text {
       white-space: pre-wrap; 
-      line-height: 1.5; 
-      font-size: 15px; 
-      width: 90%;
-      max-width: 450px;
+      line-height: 1.6; /* Jarak baris lebih lega agar enak dibaca */
+      font-size: 14px; 
+      width: 92%;
+      max-width: 500px;
       text-align: center;
-      transition: opacity 1s ease; /* Efek halus muncul-hilang */
+      transition: opacity 1s ease;
     }
 
+    /* Saat ngetik pesan panjang, teks jadi rata kiri agar sejajar */
     .align-left {
       text-align: left !important;
     }
@@ -66,11 +67,7 @@
 <body>
 
 <div id="container" class="box" onclick="start()">
-  <div id="text">hallo kak. maaf ganggu waktu nya yaa. kenalin aku mika vincenzo, utusan nya maul. 
-    ini mutiara kanjeng ratu aya yaa? kemarin maul titip pesan katanya buat kaka, malu katanya.
-    pake malu segala loh, orang biasanya juga malu malu in loh kak haduh, mana suka so kull lagi, kull dari hongkong kali dia
-  maaf ya kak mika lupa nyampein pesan nya kemarin. mika lagi sibuk latihan masak telor buat ikut master sepp hehe, suka aga gosong dikit tapi masih oke sih kak.
-  paling di sembur sepp juna nanti. sekali lagi maaf yaa mika ganggu waktu nya, gara gara maul nih dasar </div>
+  <div id="text">hallo kak. maaf ganggu waktu nya yaa. kenalin aku mika vincenzo, utusan nya maul...</div>
   <div id="hintText" class="hint">tap dimana aja yaa terserah kaka</div>
 </div>
 
@@ -79,7 +76,7 @@
 </audio>
 
 <script>
-  // TIGA KALIMAT PEMBUKA (Bisa kamu ganti isinya di sini)
+  // Kalimat pembuka yang muncul bergantian (Fade in/out)
   const introTexts = [
     "hallo mba aya jeleqq",
     "jangan jeleq deh kasian, mba aya cantik ajahh",
@@ -88,24 +85,26 @@
     "oiyaa kemaren gua mau bilang ini tapi lupa dikit."
   ];
 
-  const message = `selamat ulang tahun ya, aya.
+  // Pesan utama (Mika Vincenzo Style) - Sudah diatur agar SEJAJAR
+  const message = `hallo kak. maaf ganggu waktu nya yaa.
+kenalin aku mika vincenzo, utusan nya maul.
 
-di hari kamu nambah usia ini,
-gua cuma pengen kamu tau
-kalo kehadiran kamu pernah
-berarti banget di hidup gua.
+ini mutiara kanjeng ratu aya yaa? 
+kemarin maul titip pesan katanya buat kaka, 
+malu katanya.
 
-makasih karena pernah hadir,
-pernah nemenin,
-dan pernah jadi bagian
-dari cerita gua.
+pake malu segala loh, orang biasanya juga 
+malu maluin loh kak haduh, mana suka so kull lagi, 
+kull dari hongkong kali dia.
 
-semoga di umur kamu yang sekarang,
-kamu selalu dikelilingi hal baik,
-orang-orang tulus,
-dan hidup yang bikin kamu tenang.
+maaf ya kak mika lupa nyampein pesan nya kemarin. 
+mika lagi sibuk latihan masak telor buat ikut 
+master sepp hehe, suka aga gosong dikit 
+tapi masih oke sih kak.
 
-kamu pantas buat bahagia.`;
+paling di sembur sepp juna nanti. 
+sekali lagi maaf yaa mika ganggu waktu nya, 
+gara gara maul nih dasar.`;
 
   let index = 0;
   let started = false;
@@ -128,18 +127,18 @@ kamu pantas buat bahagia.`;
       else clearInterval(volIn);
     }, 200);
 
-    // --- JALANKAN 3 KALIMAT PEMBUKA ---
+    // --- SEQUENCE PEMBUKA ---
     for (let quote of introTexts) {
       textEl.style.opacity = 0; 
       await sleep(800);
       textEl.innerHTML = quote;
       textEl.style.opacity = 1; 
-      await sleep(2000); // Muncul selama 2 detik
+      await sleep(2000); 
       textEl.style.opacity = 0; 
       await sleep(800);
     }
 
-    // --- MULAI SURAT UTAMA ---
+    // --- MULAI PESAN UTAMA ---
     textEl.innerHTML = "";
     textEl.style.opacity = 1;
     textEl.classList.add("align-left", "typing");
@@ -161,14 +160,3 @@ kamu pantas buat bahagia.`;
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
