@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -14,38 +13,37 @@
       font-family: 'Courier Prime', monospace; 
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       overflow-x: hidden;
     }
 
     .box {
-      /* Kunci lebar area teks agar tidak meluber */
-      width: 85%; 
-      max-width: 350px; 
-      cursor: pointer;
-      text-align: center;
+      /* Ini kuncinya: box dibuat seluas layar agar bisa di-tap di mana saja */
+      width: 100vw; 
+      height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
+      box-sizing: border-box;
+      padding: 0 10%; /* Memberi ruang di kiri-kanan teks */
+    }
+
+    #text-container {
+      max-width: 350px; /* Menjaga teks tetap rapi di tengah */
+      width: 100%;
+      text-align: center;
     }
 
     #text {
-      /* white-space normal agar HP yang membagi baris secara otomatis dan rapi */
-      white-space: normal; 
-      line-height: 1.5; 
+      white-space: pre-wrap; 
+      line-height: 2.1; 
       font-size: 14px;
-      width: 100%;
       transition: opacity 0.8s ease;
     }
 
-    /* Rata kiri khusus saat pengetikan surat otomatis */
     .align-left {
       text-align: left !important;
-      white-space: pre-wrap !important;
     }
 
     .typing::after {
@@ -62,13 +60,29 @@
       opacity: 0.3;
       margin-top: 50px;
       font-size: 11px;
+      position: absolute;
+      bottom: 10%; /* Menaruh hint di bawah layar */
     }
   </style>
 </head>
 <body>
 
 <div id="container" class="box" onclick="start()">
-  <div id="text">hallo kak. maaf ganggu waktu nya yaa. kenalin aku mika vincenzo, utusan nya maul. ini mutiara kanjeng ratu aya yaa? kemarin maul titip pesan katanya buat kaka, malu katanya. pake malu segala loh, padahal biasanya juga malu malu in loh kak haduh, mana suka so kull lagi, kull dari hongkong kali. maaf kak mika lupa nyampein pesan nya kemarin. mika lagi sibuk latihan masak telor buat ikut master sepp, suka aga gosong dikit, tapi masih bisa sih. bisa di sembur sepp juna nanti hehe.</div>
+  <div id="text-container">
+    <div id="text">hallo kak. maaf ganggu waktu nya yaa.
+kenalin aku mika vincenzo, utusan nya maul.
+
+ini mutiara kanjeng ratu aya yaa? kemarin maul
+titip pesan katanya buat kaka, malu katanya.
+pake malu segala loh, padahal biasanya juga
+malu malu in loh kak haduh, mana suka so kull lagi,
+kull dari hongkong kali.
+
+maaf kak mika lupa nyampein pesan nya kemarin.
+mika lagi sibuk latihan masak telor buat ikut
+master sepp, suka aga gosong dikit, tapi masih bisa sih.
+bisa di sembur sepp juna nanti hehe.</div>
+  </div>
 
   <div id="hintText" class="hint">tap dimana aja yaa terserah kaka</div>
 </div>
@@ -79,83 +93,22 @@
 
 <script>
   const introTexts = [
- "hallo mba aya jeleqq",
-    "jangan jeleq deh kasian, mba aya cantik ajahh",
+    "hallo mba aya jeleqq",
     "mba aya cantik apa kabar yaaa?",
-    "pasti hari hari nya nya selalu menyenangkan kan?",
-    "oiyaa kemaren gua mau bilang ini tapi lupa dikit."
+    "oiyaa kemaren mau bilang ini tapi lupa dikit."
   ];
 
-  const message = `hallo kak. maaf ganggu waktu nya yaa.
-kenalin aku mika vincenzo, utusan nya maul.
+  const message = `udah 24 aja lu, kaya baru kemaren 23 
+sekarang udah 24 aja nih bocah, 
+bentar lagi punya cucu tuh kaya nya.
 
-ini mutiara kanjeng ratu aya yaa? kemarin maul
-titip pesan katanya buat kaka, malu katanya.
+semoga di umur yang sekarang ini 
+mba aya bahagia terus menerus 
+tiap hari nya. 
 
-pake malu segala loh, orang biasanya juga 
-malu maluin loh kak haduh, mana suka so kull lagi, 
-kull dari hongkong kali dia.
+semoga harapan lu, impian lu, 
+dan semua keinginan yang lu harepin 
+bisa tercapai yaa, pasti tercapai dong.
 
-maaf kak mika lupa nyampein pesan nya kemarin. 
-mika lagi sibuk latihan masak telor buat ikut 
-master sepp hehe, suka aga gosong dikit 
-tapi masih oke sih kak.
-
-paling di sembur sepp juna nanti. 
-sekali lagi maaf yaa mika ganggu waktu nya, 
-gara gara maul nih dasar.
-
-oiya, selamat ulang tahun ya, aya.`;
-
-  let index = 0;
-  let started = false;
-
-  async function start() {
-    if (started) return;
-    started = true;
-    const textEl = document.getElementById("text");
-    const hintEl = document.getElementById("hintText");
-    const music = document.getElementById("music");
-    hintEl.style.display = "none";
-    
-    music.volume = 0;
-    music.play();
-    let volIn = setInterval(() => {
-      if (music.volume < 0.8) music.volume += 0.05;
-      else clearInterval(volIn);
-    }, 200);
-
-    for (let quote of introTexts) {
-      textEl.style.opacity = 0; 
-      await sleep(800);
-      textEl.innerHTML = quote;
-      textEl.style.opacity = 1; 
-      await sleep(2000); 
-      textEl.style.opacity = 0; 
-      await sleep(800);
-    }
-
-    textEl.innerHTML = "";
-    textEl.style.opacity = 1;
-    textEl.classList.add("align-left", "typing");
-    
-    const interval = setInterval(() => {
-      textEl.innerHTML += message.charAt(index);
-      index++;
-      window.scrollTo(0, document.body.scrollHeight);
-      if (index >= message.length) {
-        clearInterval(interval);
-      }
-    }, 80);
-  }
-
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-</script>
-
-</body>
-</html>
-
-
-
+semangat yaa mba aya, gua yakin lu bisa. 
+tapi dari dulu juga lu udah keren
