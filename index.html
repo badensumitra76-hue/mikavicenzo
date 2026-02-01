@@ -13,39 +13,44 @@
       font-family: 'Courier Prime', monospace; 
       margin: 0;
       padding: 0;
-      /* Menghilangkan flex center agar konten bisa memanjang ke bawah */
-      display: block; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh; /* Menggunakan min-height agar bisa discroll */
       overflow-x: hidden;
-      overflow-y: auto; /* Izinkan scroll vertikal */
-      height: 100%;
     }
 
     .box {
-      width: 100%; 
-      min-height: 100vh; /* Minimal setinggi layar */
+      width: 100vw; 
+      min-height: 100vh; /* Agar tetap penuh layar tapi bisa memanjang */
       cursor: pointer;
       text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 50px 10%; /* Beri ruang atas bawah agar teks tidak mepet */
+      padding: 50px 7.5%; /* Memberi ruang atas bawah untuk scroll */
       box-sizing: border-box;
     }
 
     #text {
       white-space: normal; 
-      line-height: 1.6;
+      line-height: 1.8; /* Spasi antar baris agar lebih enak dibaca */
       font-size: 14px;
       width: 100%;
       max-width: 350px;
       transition: opacity 0.8s ease;
-      word-wrap: break-word;
     }
 
     .align-left {
       text-align: left !important;
       white-space: pre-wrap !important;
+    }
+
+    /* Menghilangkan pemusatan vertikal saat pesan panjang mulai diketik */
+    .start-typing {
+      justify-content: flex-start !important;
+      padding-top: 50px;
     }
 
     .typing::after {
@@ -59,20 +64,23 @@
     }
 
     .hint {
-      opacity: 0.4;
+      opacity: 0.3;
+      margin-top: 50px;
       font-size: 11px;
-      position: absolute;
+      position: fixed; /* Hint tetap di posisi bawah meski discroll */
       bottom: 5%;
-      width: 100%;
-      text-align: center;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
     }
   </style>
 </head>
-<body onclick="start()">
+<body>
 
-<div id="container" class="box">
+<div id="container" class="box" onclick="start()">
   <div id="text">hallo kak. maaf ganggu waktu nya yaa. kenalin aku mika vincenzo, utusan nya maul. kemarin maul titip pesan katanya buat kaka, malu katanya. pake malu segala loh, orang biasanya juga malu malu in loh kak haduh, mana suka so kull lagi, kull dari hongkong kali. maaf mika lupa nyampein pesan nya kemarin. mika lagi sibuk kursus masak telor buat ikut master sepp, suka aga gosong dikit sama rasanya nano nano, tapi masih bisa sih. bisa di sembur sepp juna nanti hehe.</div>
-  <div id="hintText" class="hint">tap dimana saja untuk mulai</div>
+
+  <div id="hintText" class="hint">tap dimana aja yaa terserah kaka</div>
 </div>
 
 <audio id="music">
@@ -82,24 +90,32 @@
 <script>
   const introTexts = [
     "hallo mba aya jeleqq",
-    "jangan jeleq deh sekarang kasian, mba aya cantik ajahh",
+    "jangan jeleq deh sekarang kasian,\nmba aya cantik ajahh",
     "mba aya cantik apa kabar yaaa?",
-    "pasti hari-hari nya nya selalu menyenangkan kan?",
-    "gua berharap hari-hari nya selalu menyenangkan ya mba aya cantikk."
+    "pasti hari-hari nya nya\nselalu menyenangkan kan?",
+    "gua berharap hari-hari nya\nselalu menyenangkan ya mba aya cantikk."
   ];
 
   const message = `selamat ulang tahun yaa mba aya cantik, barakallah fi umrik yaa.
-mba aya udah 24 aja loh, kaya baru kemaren 22 deh.
-sekarang udah 24 aja nih bocah,
+
+mba aya udah 24 aja loh, 
+kaya baru kemaren 22 deh
+sekarang udah 24 aja nih bocah, 
 bentar lagi punya cucu kaya nya.
 
-semoga mba aya panjang umur, tambah banyak rezekinya, selalu diberi kesehatan.
-dan dengan bertambahnya umur mba aya sekarang semoga menjadi pribadi yg lebih dewasa
-dan dipermudahkan jalan untuk hal-hal yang lebih baik buat kedepan nya.
+semoga mba aya panjang umur, 
+tambah banyak rezekinya, 
+selalu diberi kesehatan
+dan dengan bertambahnya nya umur 
+mba aya sekarang semoga menjadi 
+pribadi yg lebih dewasa dan 
+dipermudahkan jalan untuk 
+hal-hal yang lebih baik buat kedepan nya.
 
 semoga di umur yang sekarang ini 
-mba aya bahagia terus menerus ya tiap hari nya.
-pokonya harus bahagia, kalo ngga gua tampol lu.
+mba aya bahagia terus menerus ya 
+tiap hari nya pokonya harus bahagia, 
+kalo ngga gua tampol lu.
 
 semoga harapan lu, impian lu 
 dan semua keinginan yang lu harepin 
@@ -110,41 +126,54 @@ dari dulu juga lu udah keren tau,
 keren banget malah waww emejing ges 
 pokonya mantep bocah satu ini.
 
-tadi gua liat truk molen lucuu, warna kuning.
-nanti gua kirim truk molen aja yaa mba aya 
+tadi gua liat truk molen lucuu, warna kuning
+nanti gua kirim truk molen aja yaa mba aya  
 apa mau ayam warna warni ajahh.
 
-salam buat temen-temen lu, bu eva, kak yanti, mba galuh, mba el, mba lulu, mba syarif, dewi, ismail
-dan temen-temen lu yang lainnya semoga sehat-sehat terus yaa. maafin gua.
+salam buat temen-temen lu, bu eva, kak yanti, 
+mba galuh, mba el, mba lulu, mba syarif, dewi, 
+ismail dan temen-temen lu yang lainnya 
+semoga sehat-sehat terus yaa. maafin gua.
 
-buat keluarga lu, ibu lu, ade-ade lu anggun, cece, abang kafa. kafa sekarang udah sma kaya nya yaa?
-ohh sama si adick kecil kesayangan lu, semoga sehat-sehat terus yahh adick kecilllll.
-katanya kalo udah besar, nanti mau di beliin kuda balap tuh sama tante ayaa asikkkk.
+buat keluarga lu, ibu lu, ade-ade lu anggun, 
+cece, abang kafa. kafa sekarang udah sma 
+kaya nya yaa?
+ohh sama si adick kecil kesayangan lu, 
+semoga sehat-sehat terus yahh adick kecilllll
+katanya kalo udah besar, nanti mau di beliin 
+kuda balap tuh sama tante ayaa asikkkk.
 
-oiyaa kata mika buat caca jangan lupa ganti oli yaa.
+oiyaa kata mika buat caca jangan lupa ganti oli yaa
 namanya sekarang mika vincenzio tau, keren kann?
-kata mika salam buat caca kiyowo ya mba aya, jangan lupa mandi xixixi.
+kata mika salam buat caca kiyowo ya mba aya, 
+jangan lupa mandi xixixi.
 
 mba aya,
 maafin gua ya
 atas kesalahan besar yang gua lakuin.
 gua salah, gua udah ngecewain lu.
-gua sadar, dan gua nerima apa pun konsekuensinya.
-itu tanggung jawab gua sepenuhnya. udah ahh.
+gua sadar, dan gua nerima apa pun 
+konsekuensinya. itu tanggung jawab gua 
+sepenuhnya. udah ahh.
 
 lu tauu,
 gua sekarang jadi suka liat langit tau kalo malem.
 walaupun kita udah ngga bisa komunikasi lagi,
-tapi setidaknya kita masih ngeliat langit yang sama kan?
+tapi setidaknya kita masih ngeliat 
+langit yang sama kan?
 gua cuma berharap, di bawah langit itu,
 lu selalu baik-baik aja. hanya itu aja.
 
-there are feelings never meant to be expressed.
-if one day you feel loved without knowing why,
+there are feelings never 
+meant to be expressed.
+if one day you feel loved 
+without knowing why,
 that was me.
 
-i don’t want you to hear that I love you.
-i want you to feel it, without me ever having to say it.
+i don’t want you to hear 
+that I love you.
+i want you to feel it, 
+without me ever having to say it.
 
 WOPYUUU ❤`;
 
@@ -156,19 +185,18 @@ WOPYUUU ❤`;
     started = true;
 
     const textEl = document.getElementById("text");
+    const containerEl = document.getElementById("container");
     const hintEl = document.getElementById("hintText");
     const music = document.getElementById("music");
 
-    if (hintEl) hintEl.style.display = "none";
+    hintEl.style.display = "none";
     
-    try {
-        music.volume = 0;
-        await music.play();
-        let volIn = setInterval(() => {
-          if (music.volume < 0.8) music.volume += 0.05;
-          else clearInterval(volIn);
-        }, 200);
-    } catch (e) {}
+    music.volume = 0;
+    music.play();
+    let volIn = setInterval(() => {
+      if (music.volume < 0.8) music.volume += 0.05;
+      else clearInterval(volIn);
+    }, 200);
 
     textEl.style.opacity = 0;
     await sleep(800);
@@ -183,28 +211,20 @@ WOPYUUU ❤`;
 
     textEl.innerHTML = "";
     textEl.style.opacity = 1;
+    containerEl.classList.add("start-typing"); // Mengubah posisi box ke atas agar scroll enak
     textEl.classList.add("align-left", "typing");
     
-    // Hilangkan justify-center agar teks mulai dari atas saat mengetik panjang
-    document.getElementById("container").style.justifyContent = "flex-start";
-    document.getElementById("container").style.paddingTop = "10vh";
-
     const interval = setInterval(() => {
       textEl.innerHTML += message.charAt(index);
       index++;
       
-      // Menggunakan scroll perlahan agar tidak lag
-      if (index % 5 === 0) { 
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: 'smooth'
-        });
-      }
+      // Auto-scroll mengikuti ketikan
+      window.scrollTo(0, document.body.scrollHeight);
 
       if (index >= message.length) {
         clearInterval(interval);
       }
-    }, 90);
+    }, 70); // Sedikit dipercepat kecepatannya agar nyaman dibaca
   }
 
   function sleep(ms) {
