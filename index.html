@@ -13,27 +13,24 @@
       font-family: 'Courier Prime', monospace; 
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      overflow: hidden;
+      /* Menghilangkan flex center agar konten bisa memanjang ke bawah */
+      display: block; 
+      overflow-x: hidden;
+      overflow-y: auto; /* Izinkan scroll vertikal */
+      height: 100%;
     }
 
     .box {
-      width: 100vw; 
-      height: 100vh;
+      width: 100%; 
+      min-height: 100vh; /* Minimal setinggi layar */
       cursor: pointer;
       text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 0 10%;
+      padding: 50px 10%; /* Beri ruang atas bawah agar teks tidak mepet */
       box-sizing: border-box;
-      position: fixed;
-      top: 0;
-      left: 0;
     }
 
     #text {
@@ -43,6 +40,7 @@
       width: 100%;
       max-width: 350px;
       transition: opacity 0.8s ease;
+      word-wrap: break-word;
     }
 
     .align-left {
@@ -64,7 +62,7 @@
       opacity: 0.4;
       font-size: 11px;
       position: absolute;
-      bottom: 10%;
+      bottom: 5%;
       width: 100%;
       text-align: center;
     }
@@ -163,7 +161,6 @@ WOPYUUU ❤`;
 
     if (hintEl) hintEl.style.display = "none";
     
-    // Play music dengan error handling
     try {
         music.volume = 0;
         await music.play();
@@ -171,9 +168,7 @@ WOPYUUU ❤`;
           if (music.volume < 0.8) music.volume += 0.05;
           else clearInterval(volIn);
         }, 200);
-    } catch (e) {
-        console.log("Musik butuh interaksi user");
-    }
+    } catch (e) {}
 
     textEl.style.opacity = 0;
     await sleep(800);
@@ -190,11 +185,22 @@ WOPYUUU ❤`;
     textEl.style.opacity = 1;
     textEl.classList.add("align-left", "typing");
     
+    // Hilangkan justify-center agar teks mulai dari atas saat mengetik panjang
+    document.getElementById("container").style.justifyContent = "flex-start";
+    document.getElementById("container").style.paddingTop = "10vh";
+
     const interval = setInterval(() => {
       textEl.innerHTML += message.charAt(index);
       index++;
-      // Auto scroll ke bawah agar teks baru kelihatan di HP
-      window.scrollTo(0, document.body.scrollHeight);
+      
+      // Menggunakan scroll perlahan agar tidak lag
+      if (index % 5 === 0) { 
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+        });
+      }
+
       if (index >= message.length) {
         clearInterval(interval);
       }
