@@ -17,7 +17,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
     .box {
@@ -29,13 +29,16 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 0 7.5%;
+      padding: 0 10%;
       box-sizing: border-box;
+      position: fixed;
+      top: 0;
+      left: 0;
     }
 
     #text {
       white-space: normal; 
-      line-height: 1.5; /* Sedikit diperlebar agar spasi ke bawah enak dibaca */
+      line-height: 1.6;
       font-size: 14px;
       width: 100%;
       max-width: 350px;
@@ -58,20 +61,20 @@
     }
 
     .hint {
-      opacity: 0.3;
-      margin-top: 50px;
+      opacity: 0.4;
       font-size: 11px;
       position: absolute;
       bottom: 10%;
+      width: 100%;
+      text-align: center;
     }
   </style>
 </head>
-<body>
+<body onclick="start()">
 
-<div id="container" class="box" onclick="start()">
+<div id="container" class="box">
   <div id="text">hallo kak. maaf ganggu waktu nya yaa. kenalin aku mika vincenzo, utusan nya maul. kemarin maul titip pesan katanya buat kaka, malu katanya. pake malu segala loh, orang biasanya juga malu malu in loh kak haduh, mana suka so kull lagi, kull dari hongkong kali. maaf mika lupa nyampein pesan nya kemarin. mika lagi sibuk kursus masak telor buat ikut master sepp, suka aga gosong dikit sama rasanya nano nano, tapi masih bisa sih. bisa di sembur sepp juna nanti hehe.</div>
-
-  <div id="hintText" class="hint">tap dimana aja yaa terserah kaka</div>
+  <div id="hintText" class="hint">tap dimana saja untuk mulai</div>
 </div>
 
 <audio id="music">
@@ -145,7 +148,7 @@ that was me.
 i don’t want you to hear that I love you.
 i want you to feel it, without me ever having to say it.
 
-WOPYUUU ❤`
+WOPYUUU ❤`;
 
   let index = 0;
   let started = false;
@@ -158,21 +161,23 @@ WOPYUUU ❤`
     const hintEl = document.getElementById("hintText");
     const music = document.getElementById("music");
 
-    hintEl.style.display = "none";
+    if (hintEl) hintEl.style.display = "none";
     
-    // Putar musik
-    music.volume = 0;
-    music.play();
-    let volIn = setInterval(() => {
-      if (music.volume < 0.8) music.volume += 0.05;
-      else clearInterval(volIn);
-    }, 200);
+    // Play music dengan error handling
+    try {
+        music.volume = 0;
+        await music.play();
+        let volIn = setInterval(() => {
+          if (music.volume < 0.8) music.volume += 0.05;
+          else clearInterval(volIn);
+        }, 200);
+    } catch (e) {
+        console.log("Musik butuh interaksi user");
+    }
 
-    // 1. Hilangkan teks Mika Vincenzo dulu
     textEl.style.opacity = 0;
     await sleep(800);
 
-    // 2. Tampilkan intro satu-satu
     for (let quote of introTexts) {
       textEl.innerHTML = quote;
       textEl.style.opacity = 1; 
@@ -181,5 +186,25 @@ WOPYUUU ❤`
       await sleep(800);
     }
 
-    // 3. Baru mulai ngetik pesan ulang tahun
-    text
+    textEl.innerHTML = "";
+    textEl.style.opacity = 1;
+    textEl.classList.add("align-left", "typing");
+    
+    const interval = setInterval(() => {
+      textEl.innerHTML += message.charAt(index);
+      index++;
+      // Auto scroll ke bawah agar teks baru kelihatan di HP
+      window.scrollTo(0, document.body.scrollHeight);
+      if (index >= message.length) {
+        clearInterval(interval);
+      }
+    }, 90);
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+</script>
+
+</body>
+</html>
